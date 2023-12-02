@@ -19,6 +19,14 @@ class Gate:
         
     def print_output(self):
         print(self.output)
+    
+    def set_input(self, input):
+        self.inputs = input
+        self.logic()
+        
+    def get_output(self):
+        self.logic()
+        return self.output
         
 # implement AND gate logic
 class ANDGate(Gate):
@@ -72,7 +80,8 @@ class NORGate(Gate):
         else: 
             self.output = False
 
-x = NORGate(inputs=[False, False])
+x = ORGate(inputs=[False, False])
 x.print_inputs()
+x.set_input([True,False])
 x.print_output()
 
