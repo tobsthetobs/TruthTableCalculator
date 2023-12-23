@@ -32,11 +32,12 @@ def get_minterms_for_SOP_bin(data: np.array):
             minterms_sop.append(binary_val[k,:])
     return np.array(minterms_sop)
             
-
+# Function used to calculate boolean expression
 def sum_of_products(data: np.array):
     vars = []
-    for i in range(len(data[:,0])-2):
-        vars.append(ascii_uppercase[i])
+    # Iterate over range of rows - 1 to get A,B,C etc for each var we need for SOPform function
+    for i in range(len(data[0,:])-1):
+        vars.append(symbols(ascii_uppercase[i]))
     minterms_int = get_minterms_for_SOP_integers(data)
     
     print("Vars: ", vars, "\n")

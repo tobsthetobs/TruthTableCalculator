@@ -16,13 +16,27 @@ class Table_Object(ck.CTkFrame):
             label = ck.CTkLabel(self, text=ascii_uppercase[i])
             label.grid(row = 0, column = i, padx=5, pady=5)
         
+
+        # Generate the binary table
+        binary_table = np.zeros((terms, cols-1), dtype=int)
+        for i in range(terms):
+            binary_table[i, :] = [int(x) for x in bin(i)[2:].zfill(cols-1)]
+        
+        col_max_index = max(range(cols))
+        
         self.table_elements = []
         for row in range(terms):
             for col in range(cols):
-                entry = ck.CTkEntry(self)
-                entry.insert(0, self.table_data[row][col])
-                entry.grid(row = row+1, column=col, padx=5, pady=5)
-                self.table_elements.append(entry)
+                if col == col_max_index:
+                    entry = ck.CTkEntry(self)
+                    entry.insert(0, self.table_data[row][col])
+                    entry.grid(row = row+1, column=col, padx=5, pady=5)
+                    self.table_elements.append(entry)
+                else:
+                    entry = ck.CTkEntry(self)
+                    entry.insert(0, binary_table[row,col])
+                    entry.grid(row = row+1, column=col, padx=5, pady=5)
+                    self.table_elements.append(entry)
     
     # Function to convert table from GUI into np.ndarray() of shape (terms, cols)    
     def get_table_data(self):
@@ -47,14 +61,21 @@ class Table_Object(ck.CTkFrame):
     def destroy_table(self):
         self.destroy()
 
-                
-        
+class BoolExpResult(ck.CTkFrame):
+    def __init__(self, master, res: str):
+        super().__init__(master)
+        label = ck.CTkLabel(self, text=res)
+        label.pack(pady=5)
+    
+    def destroy_result(self):
+        self.destroy()
  
     
 class App(ck.CTk):
     def __init__(self):
         super().__init__()
         self.table = None
+        self.result = BoolExpResult(self, "N/A")
         self.table_data = [[0, 0], [0, 0], [0, 0], [0, 0]]
         # self.table = Table_Object(self, 4,2,self.table_data)
         # self.table.pack(padx = 20, pady = 20, fill=ck.BOTH, expand = True)
@@ -62,8 +83,11 @@ class App(ck.CTk):
         self.add_table_button = ck.CTkButton(self, text="Add Table", command=self.tablebutton)
         self.add_table_button.pack(pady = 10)
         
-        self.get_table_data = ck.CTkButton(self, text="Get Table Data", command=self.get_data)
-        self.get_table_data.pack(pady = 10)
+        self.get_table_data_button = ck.CTkButton(self, text="Get Table Data", command=self.get_data)
+        self.get_table_data_button.pack(pady = 10)
+        
+        self.calculate_bool_expr_button = ck.CTkButton(self, text="Calculate Bool Expression", command=self.calculate_bool_expr)
+        self.calculate_bool_expr_button.pack(pady = 10)
         
         self.pack_propagate(True)
         
@@ -96,8 +120,15 @@ class App(ck.CTk):
         self.table = Table_Object(self,terms, cols, self.table_data)
         self.table.pack(padx = 20, pady = 20, fill=ck.BOTH, expand = True)
         
-    def calculate_kmap(table_parsed_data):
-        return Logic.get_boolean_expr(table_parsed_data)
+    def calculate_bool_expr(self):
+        if self.table != None:
+            self.result.destroy_result()
+            text = "Boolean Expression for truth table is: " + str(Logic.get_boolean_expr(self.table.get_table_data()))
+            self.result = BoolExpResult(self, text)
+            self.result.pack(pady = 20)
+        else:
+            raise ValueError("No table data loaded")
+            
     
     def get_data(self):
         if self.table != None:
@@ -106,7 +137,6 @@ class App(ck.CTk):
             return data
         else:
             return 0
-    
 
 if __name__ == "__main__":
     app = App()
