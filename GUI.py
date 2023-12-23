@@ -1,6 +1,7 @@
 import customtkinter as ck 
 import tkinter as tk
 from string import ascii_uppercase
+from Logic import Logic
 import numpy as np
 
 # Table object used to handle entries of values into table    
@@ -95,7 +96,7 @@ class App(ck.CTk):
         self.table.pack(padx = 20, pady = 20, fill=ck.BOTH, expand = True)
         
     def calculate_kmap(table_parsed_data):
-        pass
+        return Logic.get_boolean_expr(table_parsed_data)
     
     def get_data(self):
         if self.table != None:
