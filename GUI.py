@@ -65,6 +65,7 @@ class App(ck.CTk):
         self.get_table_data = ck.CTkButton(self, text="Get Table Data", command=self.get_data)
         self.get_table_data.pack(pady = 10)
         
+        self.pack_propagate(True)
         
     def tablebutton(self):
         if self.table != None:

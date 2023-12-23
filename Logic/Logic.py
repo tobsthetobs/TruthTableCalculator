@@ -3,7 +3,7 @@ from sympy import symbols, simplify_logic, SOPform
 from string import ascii_uppercase
 
 def get_boolean_expr(data):
-    pass
+    return simplify_logic(sum_of_products(data))
 
 # Returns tuple of table and minterms
 def split_data_minterms(data: np.array):
@@ -33,13 +33,13 @@ def get_minterms_for_SOP_bin(data: np.array):
     return np.array(minterms_sop)
             
 
-def sum_of_products(data):
+def sum_of_products(data: np.array):
+    vars = []
+    for i in range(len(data[:,0])-2):
+        vars.append(ascii_uppercase[i])
     minterms_int = get_minterms_for_SOP_integers(data)
     
-    expr = SOPform(minterms_int)
-
-input_array = np.array([[0, 0, 0],
-                        [0, 1, 1],
-                        [1, 0, 0],
-                        [1, 1, 1]])
-print(get_minterms_for_SOP_integers(input_array))
+    print("Vars: ", vars, "\n")
+    print("Minterms: ", minterms_int, "\n")
+    expr = SOPform(vars,minterms_int)
+    return expr
