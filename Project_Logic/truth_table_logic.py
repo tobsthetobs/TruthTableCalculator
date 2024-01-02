@@ -38,7 +38,4 @@ def sum_of_products(data: np.array):
     for i in range(len(data[0,:])-1):
         vars.append(symbols(ascii_uppercase[i]))
     minterms_int = get_minterms_for_SOP_integers(data)
-    
-    print("Vars: ", vars, "\n")
-    print("Minterms: ", minterms_int, "\n")
     return SOPform(vars,minterms_int)
