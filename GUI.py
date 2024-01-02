@@ -74,12 +74,12 @@ class BoolExpResult(ck.CTkFrame):
 class App(ck.CTk):
     def __init__(self):
         super().__init__()
+        self.title("Truthtable Calculator")
+        self.minsize(350,125)
         self.table = None
         self.result = BoolExpResult(self, "N/A")
         self.table_data = [[0, 0], [0, 0], [0, 0], [0, 0]]
-        # self.table = Table_Object(self, 4,2,self.table_data)
-        # self.table.pack(padx = 20, pady = 20, fill=ck.BOTH, expand = True)
-        
+
         self.add_table_button = ck.CTkButton(self, text="Add Table", command=self.tablebutton)
         self.add_table_button.pack(pady = 10)
         
