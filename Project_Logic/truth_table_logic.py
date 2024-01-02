@@ -2,7 +2,7 @@ import numpy as np
 from sympy import symbols, simplify_logic, SOPform
 from string import ascii_uppercase
 
-def get_boolean_expr(data):
+def get_boolean_expr(data: np.array):
     return simplify_logic(sum_of_products(data))
 
 # Returns tuple of table and minterms
@@ -27,7 +27,6 @@ def get_minterms_for_SOP_bin(data: np.array):
     binary_val, minterms = split_data_minterms(data)
     minterms_sop = []
     for k,i in enumerate(minterms):
-        print(i)
         if i == 1:
             minterms_sop.append(binary_val[k,:])
     return np.array(minterms_sop)
@@ -42,5 +41,4 @@ def sum_of_products(data: np.array):
     
     print("Vars: ", vars, "\n")
     print("Minterms: ", minterms_int, "\n")
-    expr = SOPform(vars,minterms_int)
-    return expr
+    return SOPform(vars,minterms_int)

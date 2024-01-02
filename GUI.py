@@ -1,7 +1,7 @@
 import customtkinter as ck 
 import tkinter as tk
 from string import ascii_uppercase
-from Logic import Logic
+from Logic import truth_table_logic
 import numpy as np
 
 # Table object used to handle entries of values into table    
@@ -134,7 +134,7 @@ class App(ck.CTk):
     def calculate_bool_expr(self):
         if self.table != None:
             self.result.destroy_result()
-            text = "Boolean Expression for truth table is: " + str(Logic.get_boolean_expr(self.table.get_table_data()))
+            text = "Boolean Expression for truth table is: " + str(truth_table_logic.get_boolean_expr(self.table.get_table_data()))
             self.result = BoolExpResult(self, text)
             self.result.pack(pady = 20)
         else:
