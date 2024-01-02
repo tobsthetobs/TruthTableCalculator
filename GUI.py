@@ -14,7 +14,7 @@ class Table_Object(ck.CTkFrame):
         
         for i in range(cols):
             label = ck.CTkLabel(self, text=ascii_uppercase[i])
-            label.grid(row = 0, column = i, padx=5, pady=5)
+            label.grid(row = 0, column = i, padx=25, pady=5)
         
 
         # Generate the binary table
@@ -32,12 +32,20 @@ class Table_Object(ck.CTkFrame):
                     entry.insert(0, self.table_data[row][col])
                     entry.grid(row = row+1, column=col, padx=5, pady=5)
                     self.table_elements.append(entry)
+                # Table elements that correspond to non - minterms dont need to be entries :
+                else:
+                    label = ck.CTkLabel(self, text=str(binary_table[row,col]))
+                    label.grid(row = row+1, column=col, padx=25, pady=5)
+                    self.table_elements.append(label)
+
+                """  Code below is used to make all entries of the table a CTkEntry, 
+                     this however makes the entire table writeable and does not make sense to do so as Logic is not implemented to account for this.    
                 else:
                     entry = ck.CTkEntry(self)
                     entry.insert(0, binary_table[row,col])
                     entry.grid(row = row+1, column=col, padx=5, pady=5)
-                    self.table_elements.append(entry)
-    
+                    self.table_elements.append(entry)            
+                """
     # Function to convert table from GUI into np.ndarray() of shape (terms, cols)    
     def get_table_data(self):
         data = np.zeros((self.terms_i, self.cols_i))
@@ -49,7 +57,10 @@ class Table_Object(ck.CTkFrame):
             if i % self.cols_i == 0 and i != 0:
                 row_i += 1    
             
-            data[row_i, col_i] = element.get()
+            if isinstance(element, ck.CTkEntry):
+                data[row_i, col_i] = element.get()
+            else:
+                data[row_i, col_i] = int(element.cget("text"))
             col_i += 1
             
             if col_i == self.cols_i:
