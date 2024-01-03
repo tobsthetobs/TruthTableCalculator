@@ -66,7 +66,6 @@ class Table_Object(ck.CTkFrame):
             if col_i == self.cols_i:
                 col_i = 0
             
-        print(data)
         return data
     
     def destroy_table(self):
@@ -110,14 +109,14 @@ class App(ck.CTk):
         cols= int(dialog.get_input())
         
         # print for debugging.
-        print("Number of variables entered: ", cols)
+        # print("Number of variables entered: ", cols)
         
         # assign amount of terms and add one to cols for last column as 
         terms = 2**cols
         cols = cols + 1
         
         # print for debugging.
-        print("Table of dims: ",terms,cols)
+        # print("Table of dims: ",terms,cols)
         
         # Make table and assign all initial values to zero for data. 
         self.table_data = 0
@@ -144,7 +143,7 @@ class App(ck.CTk):
     def get_data(self):
         if self.table != None:
             data = self.table.get_table_data()
-            print("Data from table parsed")
+            # print("Data from table parsed")
             return data
         else:
             return 0
