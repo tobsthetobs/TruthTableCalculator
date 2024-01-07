@@ -143,7 +143,7 @@ class App(ck.CTk):
     def get_data(self):
         if self.table != None:
             data = self.table.get_table_data()
-            # print("Data from table parsed")
+            print("Data from table parsed", data)
             return data
         else:
             return 0

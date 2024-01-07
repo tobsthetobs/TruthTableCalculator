@@ -1,0 +1,7 @@
+###### Required packages newest versions should be fine dont know about older versions so minimum is listed
+customtkinter>=5.2.1
+sympy>=1.7.1
+tkinter>=8.6
+
+###### Just using arrays from numpy so anything should be fine
+numpy
