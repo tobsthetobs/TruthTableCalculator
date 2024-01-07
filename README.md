@@ -7,7 +7,6 @@ This repo is for a python application for which with a simple UI the user can in
 Use the a package manager like [pip](https://pip.pypa.io/en/stable/) to install to install the following libaries if not downloading executeable:
 
 ```bash
-cd project_dir
 pip install -r requirements.txt
 ```
 
