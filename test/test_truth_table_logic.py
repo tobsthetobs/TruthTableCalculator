@@ -23,9 +23,9 @@ class test_logic(unittest.TestCase):
                                 [1, 1, 0, 1],
                                 [1, 1, 1, 1]])
         
-        result_OR = get_minterms_for_SOP_integers(input_OR)
-        result_AND = get_minterms_for_SOP_integers(input_AND)
-        result_3var = get_minterms_for_SOP_integers(input_3var)
+        result_OR, _ = get_minterms_for_SOP_integers(input_OR)
+        result_AND, _ = get_minterms_for_SOP_integers(input_AND)
+        result_3var, _ = get_minterms_for_SOP_integers(input_3var)
         self.assertEqual(result_OR, [1,2,3])
         self.assertEqual(result_AND, [3])
         self.assertEqual(result_3var, [3, 5, 6, 7])
@@ -53,3 +53,15 @@ class test_logic(unittest.TestCase):
                             [1, 1, 1, 1]])
         result = str(get_boolean_expr(input))
         self.assertEqual(result, "C & (A | B)")
+        
+    def test_dont_care_conditions(self):
+        input = np.array([[0, 0, 0, -1],
+                            [0, 0, 1, -1],
+                            [0, 1, 0, -1],
+                            [0, 1, 1, 1],
+                            [1, 0, 0, 0],
+                            [1, 0, 1, 1],
+                            [1, 1, 0, 0],
+                            [1, 1, 1, 0]])
+        result = str(get_boolean_expr(input))
+        self.assertEqual(result, "~A | (C & ~B)")

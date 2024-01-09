@@ -34,8 +34,8 @@ python -m unittest discover -p "test_*"
 ## Todo
 
 - [x] Add basic table to expression via GUI functionality
-- [ ] Add support for entry of Dont Care conditions.
-- [ ] Add parser for estimating number of gates needed to implement given function from table.
+- [X] Add support for entry of Dont Care conditions.
+- [X] Add parser for estimating number of gates needed to implement given function from table.
 - [ ] Allow for user to rename variables.
 
 

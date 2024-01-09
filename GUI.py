@@ -1,7 +1,7 @@
 import customtkinter as ck 
 import tkinter as tk
 from string import ascii_uppercase
-from Project_Logic import truth_table_logic
+from Project_Logic import truth_table_logic, str_gate_parser
 import numpy as np
 
 # Table object used to handle entries of values into table    
@@ -28,16 +28,20 @@ class Table_Object(ck.CTkFrame):
         for row in range(terms):
             for col in range(cols):
                 if col == col_max_index:
-                    entry = ck.CTkEntry(self)
+                    # make a entry for each row in the last column, each of these entries validates inputs on keystroke changes 
+                    # then pass the value of the text if change is allowed to the function is_input_valid which returns either 
+                    # True or False if input is allowed.
+                    entry = ck.CTkEntry(self, validate="key", validatecommand=(self.register(self.is_input_valid), "%P"))
                     entry.insert(0, self.table_data[row][col])
                     entry.grid(row = row+1, column=col, padx=5, pady=5)
                     self.table_elements.append(entry)
-                # Table elements that correspond to non - minterms dont need to be entries :
+                # Table elements that correspond to non - maxterms dont need to be entries :
                 else:
                     label = ck.CTkLabel(self, text=str(binary_table[row,col]))
                     label.grid(row = row+1, column=col, padx=25, pady=5)
                     self.table_elements.append(label)
 
+                
                 """  Code below is used to make all entries of the table a CTkEntry, 
                      this however makes the entire table writeable and does not make sense to do so as Logic is not implemented to account for this.    
                 else:
@@ -51,6 +55,7 @@ class Table_Object(ck.CTkFrame):
         data = np.zeros((self.terms_i, self.cols_i))
         row_i = 0
         col_i = 0
+        allowed_chars = set('xXzZ')
         
         # Iterate over table elements and add to data array
         for i, element in enumerate(self.table_elements):
@@ -58,7 +63,12 @@ class Table_Object(ck.CTkFrame):
                 row_i += 1    
             
             if isinstance(element, ck.CTkEntry):
-                data[row_i, col_i] = element.get()
+                element_i = element.get()
+                try:
+                    data[row_i, col_i] = element_i
+                except ValueError:
+                    if all(char in allowed_chars for char in element_i):
+                        data[row_i,col_i] = -1  
             else:
                 data[row_i, col_i] = int(element.cget("text"))
             col_i += 1
@@ -68,14 +78,29 @@ class Table_Object(ck.CTkFrame):
             
         return data
     
+    # Destroy table used if table already exists and a new table is called to be made.
     def destroy_table(self):
         self.destroy()
+     
+    # Function used to validate entry values in table to only 0,1,x,X,z,Z   
+    def is_input_valid(self, input):
+        allowed_inputs = set('01xXzZ')
+        if len(input) <= 1:
+            if type(input) == str:
+                return all(char in allowed_inputs for char in input)
+            else:
+                return False
+        else:
+            return False
+            
 
 class BoolExpResult(ck.CTkFrame):
-    def __init__(self, master, res: str):
+    def __init__(self, master, res: str, count: str):
         super().__init__(master)
         label = ck.CTkLabel(self, text=res)
         label.pack(pady=5)
+        gate_label = ck.CTkLabel(self, text=count)
+        gate_label.pack(pady=5)
     
     def destroy_result(self):
         self.destroy()
@@ -87,7 +112,7 @@ class App(ck.CTk):
         self.title("Truthtable Calculator")
         self.minsize(350,125)
         self.table = None
-        self.result = BoolExpResult(self, "N/A")
+        self.result = BoolExpResult(self, "N/A", "N/A")
         self.table_data = [[0, 0], [0, 0], [0, 0], [0, 0]]
 
         self.add_table_button = ck.CTkButton(self, text="Add Table", command=self.tablebutton)
@@ -133,8 +158,11 @@ class App(ck.CTk):
     def calculate_bool_expr(self):
         if self.table != None:
             self.result.destroy_result()
-            text = "Boolean Expression for truth table is: " + str(truth_table_logic.get_boolean_expr(self.table.get_table_data()))
-            self.result = BoolExpResult(self, text)
+            expr = str(truth_table_logic.get_boolean_expr(self.table.get_table_data()))
+            total, and_or, nots = str_gate_parser.count_logic_operators(expr)
+            text = "Boolean Expression for truth table is: " + expr
+            count = "Function can be implemented using: " + str(and_or) + " logic gates and " + str(nots) + " inverters."
+            self.result = BoolExpResult(self, text, count)
             self.result.pack(pady = 20)
         else:
             raise ValueError("No table data loaded")

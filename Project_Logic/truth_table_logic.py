@@ -14,13 +14,17 @@ def get_minterms(data: np.array):
     return data[:,-1]
 
 # Function takes unprocessed table and returns minterms for sympy SOP as integers
+# function also returns dont care conditions
 def get_minterms_for_SOP_integers(data: np.array):
     binary_val, minterms = split_data_minterms(data)
     minterms_sop = []
+    dont_care_sop = []
     for k,i in enumerate(minterms):
         if i == 1:
             minterms_sop.append(k)
-    return minterms_sop
+        elif i == -1:
+            dont_care_sop.append(k)
+    return minterms_sop,dont_care_sop
 
 # Function takes unprocessed table and returns minterms for sympy SOP as binary values table
 def get_minterms_for_SOP_bin(data: np.array):
@@ -37,5 +41,5 @@ def sum_of_products(data: np.array):
     # Iterate over range of rows - 1 to get A,B,C etc for each var we need for SOPform function
     for i in range(len(data[0,:])-1):
         vars.append(symbols(ascii_uppercase[i]))
-    minterms_int = get_minterms_for_SOP_integers(data)
-    return SOPform(vars,minterms_int)
+    minterms_int,dont_cares_int = get_minterms_for_SOP_integers(data)
+    return SOPform(vars,minterms_int,dont_cares_int)
