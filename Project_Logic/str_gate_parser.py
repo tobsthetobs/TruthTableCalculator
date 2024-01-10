@@ -12,4 +12,3 @@ def count_logic_operators(str_expr):
         elif char in not_operators:
             not_operators[char] += 1
     return (sum(logic_operators.values()) + sum(not_operators.values()), sum(logic_operators.values()), sum(not_operators.values())) 
-print(count_logic_operators("(x & y) | (~z) | (y) | (x & y & ~z)"))
